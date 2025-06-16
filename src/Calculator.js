@@ -9,6 +9,9 @@ function App() {
     const [previous, setPrevious] = useState("");
     const [operator, setOperator] = useState(null);
     const [overwrite, setOverwrite] = useState(false);
+    const [history, setHistory] = useState([]);
+    const [showHistory, setShowHistory] = useState(false);
+
 
     const appendNumber = (number) => {
         if (overwrite) {
@@ -77,6 +80,11 @@ function App() {
         setPrevious(`${previous} ${operator} ${current}`);
         setOperator(null);
         setOverwrite(true);
+        setHistory((prev) => [
+            ...prev,
+            { expression: `${previous} ${operator} ${current}`, result: result.toString() }
+        ]);
+
     };
 
     const buttons = [
@@ -108,7 +116,9 @@ function App() {
 
     return (
         <div className="calculator">
-            <dic className="list"><FaListUl /></dic>
+            <div className="list" onClick={() => setShowHistory((prev) => !prev)}>
+                <FaListUl />
+            </div>
             <div className="display">
                 <div className="previous">{operator ? `${previous} ${operator}` : previous}</div>
                 <div className="current">{current}</div>
@@ -124,6 +134,31 @@ function App() {
                         {label}
                     </button>
                 ))}
+                {showHistory && (
+                    <div className="history-panel">
+                        <div className="history-header">
+                            <div className="drag-bar" />
+                            <span>Hôm qua</span>
+                            <button className="close-btn" onClick={() => setShowHistory(false)}>
+                                Xong
+                            </button>
+                        </div>
+                        <div className="history-body">
+                            {history.map((item, index) => (
+                                <div key={index} className="history-item">
+                                    <div className="expression">{item.expression}</div>
+                                    <div className="result">{item.result}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="history-footer">
+                            <button className="edit-btn">Sửa</button>
+                            <button className="delete-btn" onClick={() => setHistory([])}>
+                                Xóa
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
