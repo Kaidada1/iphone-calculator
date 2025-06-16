@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./Calculator.css";
+import { TiCalculator } from "react-icons/ti";
+import { FaListUl } from "react-icons/fa6";
+
 
 function App() {
     const [current, setCurrent] = useState("0");
@@ -97,13 +100,15 @@ function App() {
         ["3", "number", () => appendNumber("3")],
         ["+", "operator", () => chooseOperator("+")],
 
-        ["0", "number zero", () => appendNumber("0")],
+        [<TiCalculator size={50} />, "number", () => console.log("Calculator icon clicked")],
+        ["0", "number", () => appendNumber("0")],
         [".", "number", () => appendNumber(".")],
         ["=", "operator", calculate]
     ];
 
     return (
         <div className="calculator">
+            <dic className="list"><FaListUl /></dic>
             <div className="display">
                 <div className="previous">{operator ? `${previous} ${operator}` : previous}</div>
                 <div className="current">{current}</div>
