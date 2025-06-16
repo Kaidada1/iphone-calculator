@@ -1,0 +1,48 @@
+.calculator {
+    width: 320px;
+    margin: 100px auto;
+    background-color: black;
+    border-radius: 30px;
+    padding: 20px;
+    color: white;
+}
+
+.display {
+    height: 100px;
+    color: white;
+    font-size: 48px;
+    text-align: right;
+    margin-bottom: 10px;
+    min-height: 60px;
+}
+
+.result {
+    font-size: 1.2rem;
+    color: gray;
+}
+
+.buttons .row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.btn {
+    flex: 1;
+    height: 60px;
+    margin: 5px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 30px;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+}
+
+.btn.operator {
+    background-color: orange;
+    color: white;
+}
+
+.btn.zero {
+    flex: 2;
+}
