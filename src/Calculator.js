@@ -12,20 +12,19 @@ function App() {
             setCurrent(number);
             setOverwrite(false);
         } else {
-            setCurrent(current === "0" ? number : current + number);
+            if (number === "." && current.includes(".")) return;
+            setCurrent(current === "0" && number !== "." ? number : current + number);
         }
     };
 
     const chooseOperator = (op) => {
         if (current === "") return;
-
         if (previous !== "" && !overwrite) {
             calculate();
             setPrevious(current);
         } else {
             setPrevious(current);
         }
-
         setOperator(op);
         setOverwrite(true);
     };
@@ -38,7 +37,9 @@ function App() {
     };
 
     const toggleSign = () => {
-        setCurrent((prev) => (prev.charAt(0) === "-" ? prev.slice(1) : "-" + prev));
+        setCurrent((prev) =>
+            prev.charAt(0) === "-" ? prev.slice(1) : "-" + prev
+        );
     };
 
     const percent = () => {
@@ -75,6 +76,31 @@ function App() {
         setOverwrite(true);
     };
 
+    const buttons = [
+        ["AC", "function", clear],
+        ["±", "function", toggleSign],
+        ["%", "function", percent],
+        ["÷", "operator", () => chooseOperator("÷")],
+
+        ["7", "number", () => appendNumber("7")],
+        ["8", "number", () => appendNumber("8")],
+        ["9", "number", () => appendNumber("9")],
+        ["×", "operator", () => chooseOperator("×")],
+
+        ["4", "number", () => appendNumber("4")],
+        ["5", "number", () => appendNumber("5")],
+        ["6", "number", () => appendNumber("6")],
+        ["-", "operator", () => chooseOperator("-")],
+
+        ["1", "number", () => appendNumber("1")],
+        ["2", "number", () => appendNumber("2")],
+        ["3", "number", () => appendNumber("3")],
+        ["+", "operator", () => chooseOperator("+")],
+
+        ["0", "number zero", () => appendNumber("0")],
+        [".", "number", () => appendNumber(".")],
+        ["=", "operator", calculate]
+    ];
 
     return (
         <div className="calculator">
@@ -84,29 +110,15 @@ function App() {
             </div>
 
             <div className="button-grid">
-                <button className="button function" onClick={clear}>AC</button>
-                <button className="button function" onClick={toggleSign}>±</button>
-                <button className="button function" onClick={percent}>%</button>
-                <button className="button operator" onClick={() => chooseOperator("÷")}>÷</button>
-
-                <button className="button number" onClick={() => appendNumber("7")}>7</button>
-                <button className="button number" onClick={() => appendNumber("8")}>8</button>
-                <button className="button number" onClick={() => appendNumber("9")}>9</button>
-                <button className="button operator" onClick={() => chooseOperator("×")}>×</button>
-
-                <button className="button number" onClick={() => appendNumber("4")}>4</button>
-                <button className="button number" onClick={() => appendNumber("5")}>5</button>
-                <button className="button number" onClick={() => appendNumber("6")}>6</button>
-                <button className="button operator" onClick={() => chooseOperator("-")}>−</button>
-
-                <button className="button number" onClick={() => appendNumber("1")}>1</button>
-                <button className="button number" onClick={() => appendNumber("2")}>2</button>
-                <button className="button number" onClick={() => appendNumber("3")}>3</button>
-                <button className="button operator" onClick={() => chooseOperator("+")}>+</button>
-
-                <button className="button number zero" onClick={() => appendNumber("0")}>0</button>
-                <button className="button number" onClick={() => appendNumber(".")}>.</button>
-                <button className="button operator" onClick={calculate}>=</button>
+                {buttons.map(([label, className, onClick], index) => (
+                    <button
+                        key={index}
+                        className={`button ${className}`}
+                        onClick={onClick}
+                    >
+                        {label}
+                    </button>
+                ))}
             </div>
         </div>
     );
