@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Calculator.css";
 import { TiCalculator } from "react-icons/ti";
 import { FaListUl } from "react-icons/fa6";
@@ -11,7 +11,26 @@ function App() {
     const [overwrite, setOverwrite] = useState(false);
     const [history, setHistory] = useState([]);
     const [showHistory, setShowHistory] = useState(false);
+    const [currentTime, setCurrentTime] = useState(Date.now());
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(Date.now());
+        }, 60000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const formatRelativeTime = (timestamp) => {
+        const diff = Math.floor((currentTime - timestamp) / 1000);
+        if (diff < 10) return "vừa xong";
+        if (diff < 60) return `${diff} giây trước`;
+        const diffMinutes = Math.floor(diff / 60);
+        if (diffMinutes < 60) return `${diffMinutes} phút trước`;
+        const diffHours = Math.floor(diffMinutes / 60);
+        if (diffHours < 24) return `${diffHours} giờ trước`;
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays} ngày trước`;
+    };
 
     const appendNumber = (number) => {
         if (overwrite) {
@@ -84,7 +103,8 @@ function App() {
             ...prev,
             {
                 expression: `${previous} ${operator} ${current}`,
-                result: result.toString()
+                result: result.toString(),
+                timestamp: Date.now()
             }
         ]);
 
@@ -149,13 +169,13 @@ function App() {
                     </div>
                     <div className="history-body">
                         <div>
-                            <span>Hôm qua</span>
-                        </div>
-                        <div>
                             {history.map((item, index) => (
-                                <div key={index} className="history-item">
-                                    <div className="expression">{item.expression}</div>
-                                    <div className="result">{item.result}</div>
+                                <div>
+                                    <div className="timestamp">{formatRelativeTime(item.timestamp)}</div>
+                                    <div key={index} className="history-item">
+                                        <div className="expression">{item.expression}</div>
+                                        <div className="result">{item.result}</div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
